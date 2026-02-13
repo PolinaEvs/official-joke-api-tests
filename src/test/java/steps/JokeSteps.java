@@ -7,6 +7,11 @@ import io.restassured.response.Response;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import io.cucumber.datatable.DataTable;
+import java.util.List;
+import java.util.Map;
+
+
 public class JokeSteps {
 
     private final JokeClient jokeClient = new JokeClient();
@@ -31,4 +36,15 @@ public class JokeSteps {
     public void verifyFieldExists(String fieldName) {
         assertNotNull(response.jsonPath().get(fieldName));
     }
+    
+    @Then("the response should contain fields:")
+    public void verifyFields(DataTable dataTable) {
+      List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+
+      for (Map<String, String> row : rows) {
+        String fieldName = row.get("field");
+        assertNotNull(response.jsonPath().get(fieldName));
+      }
+    }
+
 }
